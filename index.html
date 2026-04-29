@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+</head>
+<body>
+
+<p id="msg">Looking up your link...</p>
+
+<script>
+  // ✏️ Replace this with your own GitHub username and repo name
+  const MAPS_URL = "https://raw.githubusercontent.com/chatgptbysohel-eng/redirector/main/maps.json";
+  const FALLBACK = "https://yoursite.com"; // where to go if ID not found
+
+  async function redirect() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("io0");
+
+    if (!id) {
+      document.getElementById("msg").textContent = "No ID provided.";
+      return;
+    }
+
+    try {
+      const res  = await fetch(MAPS_URL);
+      const maps = await res.json();
+
+      if (maps[id]) {
+        window.location.href = maps[id];
+      } else {
+        document.getElementById("msg").textContent = "Link not found.";
+        setTimeout(() => window.location.href = FALLBACK, 2000);
+      }
+    } catch (e) {
+      document.getElementById("msg").textContent = "Error loading map.";
+    }
+  }
+
+  redirect();
+</script>
+
+</body>
+</html>
